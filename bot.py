@@ -198,7 +198,7 @@ class TraderBot:
             update.message.reply_text("❌ حدث خطأ أثناء معالجة الأمر. يرجى المحاولة لاحقًا.")
 
     def run(self) -> None:
-        updater = Updater("YOUR_BOT_TOKEN", use_context=True)
+        updater = Updater("8119443898:AAFwm5E368v-Ov-M_XGBQYCJxj1vMDQbv-0", use_context=True)
 
         dp = updater.dispatcher
         dp.add_handler(MessageHandler(Filters.text & ~Filters.command, self.handle_commands))
