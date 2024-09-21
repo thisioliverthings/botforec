@@ -43,7 +43,7 @@ class TraderBot:
         else:
             update.message.reply_text("❌ يرجى كتابة اقتراحك بعد الأمر.")
     except Exception as e:
-        logger.error(f"Error processing suggestion: {e}")  # تم إغلاق القوس هنا
+        logger.error(f"error processing suggestion: {e}")  # تم إغلاق القوس هنا
         update.message.reply_text("❌ حدث خطأ أثناء معالجة الاقتراح. يرجى المحاولة لاحقًا.")
 
     def help_command(self, update: Update, context: CallbackContext) -> None:
