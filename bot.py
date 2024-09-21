@@ -4,7 +4,7 @@ from database import load_user_data, save_user_data
 import logging
 import json
 
-# إعداد الـ Token الخاص بالبوت
+#  إعداد الـ Token الخاص بالبوت
 API_TOKEN = '8119443898:AAFwm5E368v-Ov-M_XGBQYCJxj1vMDQbv-0'
 
 KNOWN_COMMANDS = {'start', 'help', 'حسابي', 'اقتراح', 'سحب', 'إيداع'}
