@@ -33,18 +33,19 @@ class TraderBot:
         context.bot.send_message(chat_id=update.message.chat_id, text=welcome_message, parse_mode='HTML')
 
     def suggestion(self, update: Update, context: CallbackContext) -> None:
-    user_id = update.message.from_user.id
-    suggestion_text = ' '.join(context.args)
+        user_id = update.message.from_user.id
+        suggestion_text = ' '.join(context.args)
 
-    try:
-        if suggestion_text:
-            context.bot.send_message(chat_id=7161132306, text=f"اقتراح من المستخدم {user_id}: {suggestion_text}")
-            update.message.reply_text("✅ تم إرسال اقتراحك بنجاح.")
-        else:
-            update.message.reply_text("❌ يرجى كتابة اقتراحك بعد الأمر.")
-    except Exception as e:
-        logger.error(f"error processing suggestion: {e}")  # تم إغلاق القوس هنا
-        update.message.reply_text("❌ حدث خطأ أثناء معالجة الاقتراح. يرجى المحاولة لاحقًا.")
+        try:
+            if suggestion_text:
+                context.bot.send_message(chat_id=OWNER_CHAT_ID, text=f"اقتراح من المستخدم {user_id}: {suggestion_text}")
+                update.message.reply_text("✅ تم إرسال اقتراحك بنجاح.")
+            else:
+                update.message.reply_text("❌ يرجى كتابة اقتراحك بعد الأمر.")
+        except Exception as e:
+            logger.error(f"Error handling suggestion: {e}")
+            update.message.reply_text("❌ حدث خطأ أثناء معالجة الاقتراح. يرجى المحاولة لاحقًا.")
+
 
     def help_command(self, update: Update, context: CallbackContext) -> None:
         keyboard = [
@@ -164,65 +165,60 @@ class TraderBot:
                     save_user_data(user_id, language, balance, account_number)
                     save_user_data(recipient, recipient_data[0], recipient_balance, recipient_data[2])
                     update.message.reply_text(f"➡️ تم تحويل <b>{amount}</b> إلى <b>{recipient}</b> بنجاح.", parse_mode='HTML')
-                else:
-                    update.message.reply_text("❌ رصيدك غير كافٍ لإجراء هذه العملية.")
+                update.message.reply_text("❌ رصيدك غير كافٍ لإتمام عملية التحويل.", parse_mode='HTML')
             else:
-                update.message.reply_text("❓ لم يتم العثور على المستخدم الذي تحاول التحويل إليه.")
+                update.message.reply_text("❌ المستخدم الذي تحاول تحويل المال إليه غير موجود.", parse_mode='HTML')
         except (ValueError, IndexError):
-            update.message.reply_text("❌ صيغة الأمر غير صحيحة. يجب أن تكتب: تحويل [المبلغ] إلى [معرف المستلم].")
+            update.message.reply_text(
+                "❌ <b>خطأ:</b> صيغة الأمر غير صحيحة.\n"
+                "يجب عليك كتابة الأمر كالتالي:\n"
+                "<b>تحويل \"المبلغ\" إلى \"رقم الحساب\"</b>\n"
+                "مثال: <code>تحويل 50 إلى 123456</code> لتحويل 50 وحدة إلى حساب رقم 123456.",
+                parse_mode='HTML'
+            )
 
-    def handle_balance(self, update: Update) -> None:
-        user_id = update.message.from_user.id
-        language, balance, account_number = load_user_data(user_id)
-        update.message.reply_text(f"💰 رصيدك الحالي هو: <b>{balance}</b>.", parse_mode='HTML')
+    def create_help_buttons(self) -> InlineKeyboardMarkup:
+        keyboard = [
+            [InlineKeyboardButton("📜 الأوامر الأساسية", callback_data='help_section_1')],
+            [InlineKeyboardButton("💰 نظام النقاط", callback_data='help_section_2')],
+            [InlineKeyboardButton("🌍 إدارة اللغة", callback_data='help_section_3')],
+            [InlineKeyboardButton("🎟️ العضويات", callback_data='help_section_4')],
+            [InlineKeyboardButton("🎁 العروض والمكافآت", callback_data='help_section_5')],
+            [InlineKeyboardButton("🔙 رجوع", callback_data='help_menu')]
+        ]
+        return InlineKeyboardMarkup(keyboard)
 
-    def handle_commands(self, update: Update, context: CallbackContext) -> None:
-        command = update.message.text.strip()
-        user_id = update.message.from_user.id
-
-    # الأوامر المعروفة
-        known_commands = ['/start', '/help', 'حسابي', 'اقتراح', 'إيداع', 'سحب', 'تحويل', 'رصيدي']
-
-        if command in known_commands:
-            try:
-                language, balance, account_number = load_user_data(user_id)
-
-                if command == '/start':
-                    self.handle_start(update, context)
-                elif command.lower() in ['/help', 'مساعدة']:
-                    self.help_command(update, context)
-                elif command == 'حسابي':
-                    self.handle_account_info(update)
-                elif command.startswith('اقتراح'):
-                    self.suggestion(update, context)
-                elif command.startswith('إيداع'):
-                    self.handle_deposit(update, command)
-                elif command.startswith('سحب'):
-                    self.handle_withdraw(update, command)
-                elif command.startswith('تحويل'):
-                    self.handle_transfer(update, command)
-                elif command == 'رصيدي':
-                    self.handle_balance(update)
-
-          except Exception as e:
-                logger.error(f"Error handling command: {e}")
-                update.message.reply_text("❌ حدث خطأ أثناء معالجة الأمر. يرجى المحاولة لاحقًا.")
-        else:
-        # لا تفعل شيئًا إذا لم يكن الأمر معروفًا
-            pass
-
-    def run(self) -> None:
-        updater = Updater("8119443898:AAFwm5E368v-Ov-M_XGBQYCJxj1vMDQbv-0", use_context=True)
-
-        dp = updater.dispatcher
-        dp.add_handler(MessageHandler(Filters.text & ~Filters.command, self.handle_commands))
-        dp.add_handler(CommandHandler('start', self.handle_start))
-        dp.add_handler(CommandHandler('help', self.help_command))
+    def create_menu_buttons(self) -> InlineKeyboardMarkup:
+        keyboard = [
+            [InlineKeyboardButton("📜 الأوامر الأساسية", callback_data='help_section_1')],
+            [InlineKeyboardButton("💰 نظام النقاط", callback_data='help_section_2')],
+            [InlineKeyboardButton("🌍 إدارة اللغة", callback_data='help_section_3')],
+            [InlineKeyboardButton("🎟️ العضويات", callback_data='help_section_4')],
+            [InlineKeyboardButton("🎁 العروض والمكافآت", callback_data='help_section_5')],
+            [InlineKeyboardButton("❌ الخروج", callback_data='confirm_exit')]
+        ]
+        return InlineKeyboardMarkup(keyboard)
 
 
-        updater.start_polling()
-        updater.idle()
+def main():
+    updater = Updater("YOUR_TOKEN", use_context=True)
+    dp = updater.dispatcher
+
+    # إعداد كافة الأوامر والردود
+    bot = TraderBot()
+
+    dp.add_handler(CommandHandler("start", bot.handle_start))
+    dp.add_handler(CommandHandler("help", bot.help_command))
+    dp.add_handler(MessageHandler(Filters.text & ~Filters.command, bot.handle_message))
+    dp.add_handler(MessageHandler(Filters.regex(r'^إيداع'), lambda update, context: bot.handle_deposit(update, update.message.text)))
+    dp.add_handler(MessageHandler(Filters.regex(r'^سحب'), lambda update, context: bot.handle_withdraw(update, update.message.text)))
+    dp.add_handler(MessageHandler(Filters.regex(r'^تحويل'), lambda update, context: bot.handle_transfer(update, update.message.text)))
+    dp.add_handler(MessageHandler(Filters.regex(r'^حسابي'), bot.handle_account_info))
+    dp.add_handler(CallbackQueryHandler(bot.button))
+
+    # تشغيل البوت
+    updater.start_polling()
+    updater.idle()
 
 if __name__ == '__main__':
-    bot = TraderBot()
-    bot.run()
+    main()
