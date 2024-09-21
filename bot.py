@@ -44,20 +44,20 @@ class TelegramBot:
     def handle_commands(self, update: Update, context: CallbackContext) -> None:
         command = update.message.text
     # معالجة الأوامر
-        if command == 'start':
-           update.message.reply_text('مرحبا بك في البوت!')
-        elif command == 'help':
-             update.message.reply_text('هذه هي قائمة الأوامر المتاحة.')
+        if command == '/start':
+            update.message.reply_text('مرحبا بك في البوت!')
+        elif command == '/help':
+            update.message.reply_text('هذه هي قائمة الأوامر المتاحة.')
         elif command == 'حسابي':
-             update.message.reply_text('هنا معلومات حسابك.')
+            update.message.reply_text('هنا معلومات حسابك.')
         elif command == 'اقتراح':
-             update.message.reply_text('أرسل اقتراحك.')
+            update.message.reply_text('أرسل اقتراحك.')
         elif command == 'سحب':
-              update.message.reply_text('كم تريد سحبه؟')
+            update.message.reply_text('كم تريد سحبه؟')
         elif command == 'إيداع':
-               update.message.reply_text('كم تريد إيداعه؟')
+            update.message.reply_text('كم تريد إيداعه؟')
         else:
-              update.message.reply_text('لم أتعرف على هذا الأمر.')
+            update.message.reply_text('لم أتعرف على هذا الأمر.')
     def handle_account_info(self, update, language, balance, account_number):
         user_id = update.message.from_user.id
         username = update.message.from_user.username or "غير متوفر"
