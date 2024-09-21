@@ -47,7 +47,7 @@ class TelegramBot:
                 )
 
     def handle_commands(self, update: Update, context: CallbackContext) -> None:
-    command = update.message.text
+        command = update.message.text
     # معالجة الأوامر
         if command == '/start':
         update.message.reply_text('مرحبا بك في البوت!')
