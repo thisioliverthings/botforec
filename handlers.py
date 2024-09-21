@@ -48,7 +48,7 @@ def help_command(update: Update, context: CallbackContext) -> None:
     reply_markup = InlineKeyboardMarkup(keyboard)
     update.message.reply_text("📚 مرحبًا! اختر قسمًا لعرض الشرح:", reply_markup=reply_markup)
 
-JSON
+
 def load_help_texts():
     with open('help_text.json', 'r', encoding='utf-8') as f:
         return json.load(f)
