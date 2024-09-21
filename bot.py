@@ -3,6 +3,7 @@ from telegram.ext import CallbackContext, CommandHandler, MessageHandler, Filter
 from database import load_user_data, save_user_data
 import logging
 import json
+from telegram.ext import CallbackQueryHandler
 
 # إعداد نظام التسجيل لمراقبة الأخطاء
 logging.basicConfig(level=logging.INFO)
