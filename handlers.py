@@ -2,8 +2,7 @@ from telegram import Update
 from telegram.ext import CallbackContext
 from database import load_user_data, save_user_data
 import logging
-from buttons import
-create_help_buttons,create_menu_buttons
+from buttons import create_menu_buttons, create_help_buttons
 
 def handle_message(update: Update, context: CallbackContext) -> None:
     user_id = update.effective_user.id
