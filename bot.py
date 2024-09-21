@@ -204,7 +204,7 @@ class TraderBot:
                 elif command == 'رصيدي':
                     self.handle_balance(update)
 
-            except Exception as e:
+          except Exception as e:
                 logger.error(f"Error handling command: {e}")
                 update.message.reply_text("❌ حدث خطأ أثناء معالجة الأمر. يرجى المحاولة لاحقًا.")
         else:
