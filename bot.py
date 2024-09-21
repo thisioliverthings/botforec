@@ -174,7 +174,7 @@ class ButtonHandler:
     ])
 
     # أكمل تنفيذ الكود هنا كما تريد
-        query.edit_message_text(text=self.bot.help_texts.get('main_menu', 'لم يتم العثور على نص المساعدة.'),
+   query.edit_message_text(text=self.bot.help_texts.get('main_menu', 'لم يتم العثور على نص المساعدة.'),
                                 reply_markup=reply_markup_help)
 
 # بداية تشغيل البوت
