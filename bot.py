@@ -170,8 +170,7 @@ class ButtonHandler:
 
         reply_markup_help = InlineKeyboardMarkup([
             [InlineKeyboardButton("🔙 رجوع", callback_data='help_menu')],
-            [InlineKeyboardButton("❌ خروج",[InlineKeyboardButton("❌ خروج", callback_data='confirm_exit')],
-        ])
+            [InlineKeyboardButton("❌ خروج",[InlineKeyboardButton("❌ خروج", callback_data='confirm_exit')]])
         query.edit_message_text(text=self.bot.help_texts.get('main_menu', 'لم يتم العثور على نص المساعدة.'),
                                 reply_markup=reply_markup_help)
 
