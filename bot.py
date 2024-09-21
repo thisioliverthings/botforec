@@ -174,13 +174,12 @@ class ButtonHandler:
     ])
 
     # أكمل تنفيذ الكود هنا كما تريد
-   query.edit_message_text(text=self.bot.help_texts.get('main_menu', 'لم يتم العثور على نص المساعدة.'),
-                                reply_markup=reply_markup_help)
+   query.edit_message_text(text=self.bot.help_texts.get('main_menu', 'لم يتم العثور على نص المساعدة.'),reply_markup=reply_markup_help)
 
 # بداية تشغيل البوت
 if __name__ == '__main__':
     init_db()
-    TOKEN = 'YOUR_API_TOKEN'  # ضع توكن البوت هنا
+    TOKEN = '8119443898:AAFwm5E368v-Ov-M_XGBQYCJxj1vMDQbv-0'  # ضع توكن البوت هنا
     bot = TelegramBot(TOKEN)
     bot.updater.start_polling()
     bot.updater.idle()
