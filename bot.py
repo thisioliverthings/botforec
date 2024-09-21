@@ -1,9 +1,8 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
-from telegram.ext import CallbackContext, CommandHandler, MessageHandler, Filters, Updater
+from telegram.ext import CallbackContext, CommandHandler, MessageHandler, Filters, Updater, CallbackQueryHandler
 from database import load_user_data, save_user_data
 import logging
 import json
-from telegram.ext import CallbackQueryHandler
 
 # إعداد نظام التسجيل لمراقبة الأخطاء
 logging.basicConfig(level=logging.INFO)
@@ -168,12 +167,12 @@ class TraderBot:
             update.message.reply_text(
                 "❌ <b>خطأ:</b> صيغة الأمر غير صحيحة.\n"
                 "يجب عليك كتابة الأمر كالتالي:\n"
-                "<b>تحويل \"المبلغ\" إلى \"رقم الحساب\"</b>\n"
-                "مثال: <code>تحويل 50 إلى 123456</code> لتحويل 50 وحدة إلى حساب رقم 123456.",
+                "<b>تحويل \"المبلغ\" إلى \"رقم حساب المستلم\"</b>\n"
+                "مثال: <code>تحويل 100 إلى 12345</code> لتحويل 100 وحدة إلى المستخدم صاحب رقم الحساب 12345.",
                 parse_mode='HTML'
             )
 
-    def create_help_buttons(self) -> InlineKeyboardMarkup:
+    def create_menu_buttons(self) -> InlineKeyboardMarkup:
         keyboard = [
             [InlineKeyboardButton("📜 الأوامر الأساسية", callback_data='help_section_1')],
             [InlineKeyboardButton("💰 نظام النقاط", callback_data='help_section_2')],
@@ -184,37 +183,47 @@ class TraderBot:
         ]
         return InlineKeyboardMarkup(keyboard)
 
-    def create_menu_buttons(self) -> InlineKeyboardMarkup:
-        keyboard = [
-            [InlineKeyboardButton("📜 الأوامر الأساسية", callback_data='help_section_1')],
-            [InlineKeyboardButton("💰 نظام النقاط", callback_data='help_section_2')],
-            [InlineKeyboardButton("🌍 إدارة اللغة", callback_data='help_section_3')],
-            [InlineKeyboardButton("🎟️ العضويات", callback_data='help_section_4')],
-            [InlineKeyboardButton("🎁 العروض والمكافآت", callback_data='help_section_5')],
-            [InlineKeyboardButton("❌ الخروج", callback_data='confirm_exit')]
-        ]
-        return InlineKeyboardMarkup(keyboard)
+    def create_help_buttons(self) -> InlineKeyboardMarkup:
+        return self.create_menu_buttons()
 
+# تحميل بيانات المستخدمين من قاعدة البيانات
+def load_user_data(user_id: int):
+    try:
+        with open(f'user_data/{user_id}.json', 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        return data['language'], data['balance'], data['account_number']
+    except FileNotFoundError:
+        return 'ar', 0, generate_unique_account_number(user_id)
+
+# حفظ بيانات المستخدمين في قاعدة البيانات
+def save_user_data(user_id: int, language: str, balance: float, account_number: str) -> None:
+    data = {
+        'language': language,
+        'balance': balance,
+        'account_number': account_number
+    }
+    with open(f'user_data/{user_id}.json', 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=4)
+
+# توليد رقم حساب فريد لكل مستخدم
+def generate_unique_account_number(user_id: int) -> str:
+    return f"LoL{user_id}"
 
 def main():
-    updater = Updater("8119443898:AAFwm5E368v-Ov-M_XGBQYCJxj1vMDQbv-0", use_context=True)
+    bot_token = "8119443898:AAFwm5E368v-Ov-M_XGBQYCJxj1vMDQbv-0"
+    updater = Updater(token=bot_token, use_context=True)
     dp = updater.dispatcher
 
-    # إعداد كافة الأوامر والردود
-    bot = TraderBot()
+    bot_instance = TraderBot()
 
-    dp.add_handler(CommandHandler("start", bot.handle_start))
-    dp.add_handler(CommandHandler("help", bot.help_command))
-    dp.add_handler(MessageHandler(Filters.text & ~Filters.command, bot.handle_message))
-    dp.add_handler(MessageHandler(Filters.regex(r'^إيداع'), lambda update, context: bot.handle_deposit(update, update.message.text)))
-    dp.add_handler(MessageHandler(Filters.regex(r'^سحب'), lambda update, context: bot.handle_withdraw(update, update.message.text)))
-    dp.add_handler(MessageHandler(Filters.regex(r'^تحويل'), lambda update, context: bot.handle_transfer(update, update.message.text)))
-    dp.add_handler(MessageHandler(Filters.regex(r'^حسابي'), bot.handle_account_info))
-    dp.add_handler(CallbackQueryHandler(bot.button))
+    dp.add_handler(CommandHandler("start", bot_instance.handle_start))
+    dp.add_handler(CommandHandler("help", bot_instance.help_command))
+    dp.add_handler(MessageHandler(Filters.text & ~Filters.command, bot_instance.handle_message))
+    dp.add_handler(CallbackQueryHandler(bot_instance.button))
 
-    # تشغيل البوت
+    # بدء التشغيل
     updater.start_polling()
     updater.idle()
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
