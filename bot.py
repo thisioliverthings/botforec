@@ -17,11 +17,10 @@ def start_bot():
     dispatcher = updater.dispatcher
     dispatcher.add_handler(CommandHandler('start', handle_commands))
     dispatcher.add_handler(CommandHandler('help', handle_commands))
-    dispatcher.add_handler(CommandHandler('حسابي', handle_commands))
-    dispatcher.add_handler(CommandHandler('اقتراح', handle_commands))
-    dispatcher.add_handler(CommandHandler('سحب', handle_commands))
-    dispatcher.add_handler(CommandHandler('إيداع', handle_commands))
-
+dispatcher.add_handler(CommandHandler('/حسابي', handle_commands))
+dispatcher.add_handler(CommandHandler('/اقتراح', handle_commands))
+dispatcher.add_handler(CommandHandler('/سحب', handle_commands))
+dispatcher.add_handler(CommandHandler('/إيداع', handle_commands))
     # تصحيح الأخطاء الشائعة
     dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, correct_command))
 
