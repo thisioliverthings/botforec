@@ -10,17 +10,17 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # تحميل النصوص من ملف JSON
-with open('help_text.json', 'r', encoding='utf-8') as f:
-    help_texts = json.load(f)
+def load_help_texts():
+    with open('help_text.json', 'r', encoding='utf-8') as f:
+        return json.load(f)
 
-
-
+help_texts = load_help_texts()
 
 # قائمة الأوامر المعروفة
-KNOWN_COMMANDS = {'start', 'help', 'حسابي', 'اقتراح', 'سحب', 'إيداع'}
+KNOWN_COMMANDS = {'start', 'help', 'حسابي', 'اقتراح', 'سحب', 'إيداع', 'تغيير اللغة', 'تحويل'}
 
 def correct_command(update: Update, context: CallbackContext) -> None:
-    message_text = update.message.text.strip().lower()  # إزالة المسافات والتعامل مع الأحرف الصغيرة
+    message_text = update.message.text.strip().lower()
 
     if message_text in KNOWN_COMMANDS:
         update.message.reply_text(
@@ -28,9 +28,7 @@ def correct_command(update: Update, context: CallbackContext) -> None:
             parse_mode='HTML'
         )
     else:
-        # محاولة إيجاد أمر قريب من النص المدخل باستخدام difflib
         closest_matches = difflib.get_close_matches(message_text, KNOWN_COMMANDS, n=1, cutoff=0.6)
-
         if closest_matches:
             suggested_command = closest_matches[0]
             update.message.reply_text(
@@ -38,46 +36,7 @@ def correct_command(update: Update, context: CallbackContext) -> None:
                 parse_mode='HTML'
             )
         else:
-            # تجاهل الأوامر غير المعروفة
             pass
-
-
-def handle_message(update: Update, context: CallbackContext) -> None:
-    user_id = update.effective_user.id
-    username = update.effective_user.username or "غير متوفر"
-    welcome_message = (
-        f"<b>🎉 مرحبًا بك، {username}! في بوت 𝗟𝗼𝗹𝗶 𝗧𝗿𝗮𝗱𝗲𝗿𝗕𝗼𝘁! 💰</b>\n\n"
-        "<b>✨ هنا حيث يجتمع الترفيه والإثارة مع إدارة أموالك.</b>\n"
-        "<b>🌟 استعد لمغامرات ممتعة وتحديات مثيرة!</b>\n\n"
-        "<b>📜 لبدء رحلتك، استخدم الأمر <code>help</code> لتتعرف على جميع المزايا المتاحة لك.</b>\n"
-        "<b>💡 نحن هنا لجعل تجربتك مميزة وممتعة!</b>"
-    )
-    context.bot.send_message(chat_id=update.message.chat_id, text=welcome_message, parse_mode='HTML')
-
-
-
-def suggestion(update: Update, context: CallbackContext) -> None:
-    user_id = update.message.from_user.id
-    suggestion_text = ' '.join(context.args)
-
-    if suggestion_text:
-        context.bot.send_message(chat_id=OWNER_CHAT_ID, text=f"اقتراح من المستخدم {user_id}: {suggestion_text}")
-        update.message.reply_text("✅ تم إرسال اقتراحك بنجاح.")
-    else:
-        update.message.reply_text("❌ يرجى كتابة اقتراحك بعد الأمر.")
-
-def help_command(update: Update, context: CallbackContext) -> None:
-    keyboard = [
-        [InlineKeyboardButton("📜 الأوامر الأساسية", callback_data='help_section_1')],
-        [InlineKeyboardButton("💰 نظام النقاط", callback_data='help_section_2')],
-        [InlineKeyboardButton("🌍 إدارة اللغة", callback_data='help_section_3')],
-        [InlineKeyboardButton("🎟️ العضويات", callback_data='help_section_4')],
-        [InlineKeyboardButton("🎁 العروض والمكافآت", callback_data='help_section_5')],
-        [InlineKeyboardButton("🔙 رجوع", callback_data='help_menu')]
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    update.message.reply_text("📚 مرحبًا! اختر قسمًا لعرض الشرح:", reply_markup=reply_markup)
-
 
 def load_help_texts():
     with open('help_text.json', 'r', encoding='utf-8') as f:
@@ -124,11 +83,16 @@ def handle_commands(update: Update, context: CallbackContext) -> None:
             handle_account_info(update, language, balance, account_number)
         elif command.startswith('اقتراح'):
             suggestion(update, context)
+        elif command == 'تغيير اللغة':
+            handle_change_language(update)
+        elif command.startswith('تحويل'):
+            handle_transfer(update, command, user_id, language, balance, account_number)
         else:
             update.message.reply_text("❌ الأمر غير معروف. حاول مرة أخرى.")
     except Exception as e:
         logger.error(f"Error handling command: {e}")
         update.message.reply_text("❌ حدث خطأ أثناء معالجة الأمر. يرجى المحاولة لاحقًا.")
+
 
 def handle_start(update, context):
     handle_message(update, context)
