@@ -11,9 +11,10 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 def start_bot():
-    dispatcher = updater.dispatcher
+    
     updater = Updater("TOKEN", use_context=True)
     # معالجة الأوامر المعروفة
+    dispatcher = updater.dispatcher
     dispatcher.add_handler(CommandHandler('start', handle_message))
     dispatcher.add_handler(CommandHandler('help', handle_message))
     dispatcher.add_handler(CommandHandler('حسابي', handle_message))
