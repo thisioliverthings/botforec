@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 with open('help_text.json', 'r', encoding='utf-8') as f:
     help_texts = json.load(f)
 
-OWNER_CHAT_ID = 'YOUR_OWNER_CHAT_ID'  # ضع هنا معرف الدردشة الخاص بك
+OWNER_CHAT_ID = '7161132306'  # ضع هنا معرف الدردشة الخاص بك
 
 class TraderBot:
     def __init__(self):
@@ -204,12 +204,7 @@ class TraderBot:
         dp.add_handler(MessageHandler(Filters.text & ~Filters.command, self.handle_commands))
         dp.add_handler(CommandHandler('start', self.handle_start))
         dp.add_handler(CommandHandler('help', self.help_command))
-        dp.add_handler(CommandHandler('حسابي', self.handle_account_info))
-        dp.add_handler(CommandHandler('إيداع', self.handle_deposit))
-        dp.add_handler(CommandHandler('سحب', self.handle_withdraw))
-        dp.add_handler(CommandHandler('تحويل', self.handle_transfer))
-        dp.add_handler(CommandHandler('رصيدي', self.handle_balance))
-        dp.add_handler(CallbackQueryHandler(self.button))
+      
 
         updater.start_polling()
         updater.idle()
