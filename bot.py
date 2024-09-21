@@ -172,30 +172,40 @@ class TraderBot:
         language, balance, account_number = load_user_data(user_id)
         update.message.reply_text(f"💰 رصيدك الحالي هو: <b>{balance}</b>.", parse_mode='HTML')
 
-    def handle_commands(self, update: Update, context: CallbackContext) -> None:
+    def handle_commands(update: Update, context: CallbackContext) -> None:
         command = update.message.text.strip()
         user_id = update.message.from_user.id
 
-        try:
-            if command == '/start':
-                self.handle_start(update, context)
-            elif command.lower() in ['help', 'help/', '/help', 'مساعدة', 'مساعده']:
-                self.help_command(update, context)
-            elif command == 'حسابي':
-                self.handle_account_info(update)
-            elif command.startswith('إيداع'):
-                self.handle_deposit(update, command)
-            elif command.startswith('سحب'):
-                self.handle_withdraw(update, command)
-            elif command.startswith('تحويل'):
-                self.handle_transfer(update, command)
-            elif command == 'رصيدي':
-                self.handle_balance(update)
-            else:
-                update.message.reply_text("❌ الأمر غير معروف. حاول مرة أخرى.")
-        except Exception as e:
-            logger.error(f"Error handling command: {e}")
-            update.message.reply_text("❌ حدث خطأ أثناء معالجة الأمر. يرجى المحاولة لاحقًا.")
+    # الأوامر المعروفة
+        known_commands = ['/start', '/help', 'حسابي', 'اقتراح', 'إيداع', 'سحب', 'تحويل', 'رصيدي']
+
+        if command in known_commands:
+            try:
+                language, balance, account_number = load_user_data(user_id)
+
+                if command == '/start':
+                    handle_start(update, context)
+                elif command.lower() in ['/help', 'مساعدة']:
+                    help_command(update, context)
+                elif command == 'حسابي':
+                    handle_account_info(update, language, balance, account_number)
+                elif command.startswith('اقتراح'):
+                    suggestion(update, context)
+                elif command.startswith('إيداع'):
+                    handle_deposit(update, command, user_id, language, balance, account_number)
+                elif command.startswith('سحب'):
+                    handle_withdraw(update, command, user_id, language, balance, account_number)
+                elif command.startswith('تحويل'):
+                    handle_transfer(update, command, user_id, language, balance, account_number)
+                elif command == 'رصيدي':
+                    handle_balance(update, balance)
+
+            except Exception as e:
+                logger.error(f"Error handling command: {e}")
+                update.message.reply_text("❌ حدث خطأ أثناء معالجة الأمر. يرجى المحاولة لاحقًا.")
+    else:
+        # لا تفعل شيئًا إذا لم يكن الأمر معروفًا
+        pass
 
     def run(self) -> None:
         updater = Updater("8119443898:AAFwm5E368v-Ov-M_XGBQYCJxj1vMDQbv-0", use_context=True)
