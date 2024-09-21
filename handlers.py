@@ -101,46 +101,39 @@ def handle_account_info(update: Update, language, balance, account_number):
     total_transactions = 5
     last_transaction_date = "2024-09-20"
 
+    def handle_account_info(update: Update, language, balance, account_number):
+    user_id = update.message.from_user.id
+    username = update.message.from_user.username or "غير متوفر"
+    first_name = update.message.from_user.first_name or "غير متوفر"
+    last_name = update.message.from_user.last_name or "غير متوفر"
+
+    user_joined_date = update.message.date.strftime("%Y-%m-%d")
+    user_last_active = update.message.date.strftime("%Y-%m-%d %H:%M:%S")
+    account_status = "نشط" if balance > 0 else "غير نشط"
+    total_transactions = 5
+    last_transaction_date = "2024-09-20"
+
     account_info = (
-   
-    "🌟 <b>معلومات حسابك</b> 🌟\n",
-    f"👤 <b>اسم المستخدم:</b> {username}\n",
-    f"🧑 <b>الاسم الأول:</b> {first_name}\n",
-    f"👥 <b>اسم العائلة:</b> {last_name or 'غير متوفر'}\n",
-    f"📅 <b>اللغة:</b> {language}\n",
-    f"💰 <b>الرصيد:</b> {balance} ج.م\n",
-    f"🔑 <b>رقم الحساب:</b> {account_number}\n",
-    f"🆔 <b>معرف المستخدم:</b> {user_id}\n",
-    f"📅 <b>تاريخ الانضمام:</b> {user_joined_date}\n",
-    f"🕒 <b>آخر نشاط:</b> {user_last_active}\n",
-    f"⚖️ <b>حالة الحساب:</b> {account_status}\n",
-    f"🔄 <b>عدد المعاملات:</b> {total_transactions}\n",
-    f"📅 <b>تاريخ آخر معاملة:</b> {last_transaction_date}\n",
-    "----------------------------------\n",
-    "📩 <b>لأي استفسارات، لا تتردد في التواصل!</b>\n",
-    "📈 <b>شكرًا لاستخدامك بوتنا!</b>\n"
-    "🎉 <b>استمتع بتجربتك!</b>" 
+        "🌟 <b>معلومات حسابك</b> 🌟\n"
+        f"👤 <b>اسم المستخدم:</b> {username}\n"
+        f"🧑 <b>الاسم الأول:</b> {first_name}\n"
+        f"👥 <b>اسم العائلة:</b> {last_name}\n"
+        f"📅 <b>اللغة:</b> {language}\n"
+        f"💰 <b>الرصيد:</b> {balance} ج.م\n"
+        f"🔑 <b>رقم الحساب:</b> {account_number}\n"
+        f"🆔 <b>معرف المستخدم:</b> {user_id}\n"
+        f"📅 <b>تاريخ الانضمام:</b> {user_joined_date}\n"
+        f"🕒 <b>آخر نشاط:</b> {user_last_active}\n"
+        f"⚖️ <b>حالة الحساب:</b> {account_status}\n"
+        f"🔄 <b>عدد المعاملات:</b> {total_transactions}\n"
+        f"📅 <b>تاريخ آخر معاملة:</b> {last_transaction_date}\n"
+        "----------------------------------\n"
+        "📩 <b>لأي استفسارات، لا تتردد في التواصل!</b>\n"
+        "📈 <b>شكرًا لاستخدامك بوتنا!</b>\n"
+        "🎉 <b>استمتع بتجربتك!</b>"
     )
 
     update.message.reply_text(account_info, parse_mode='HTML')
-
-def handle_deposit(update, command, user_id, language, balance, account_number):
-    try:
-        amount = float(command.split()[1])
-        if amount > 0:
-            balance += amount
-            save_user_data(user_id, language, balance, account_number)
-            update.message.reply_text(f"💵 تم إيداع <b>{amount}</b> بنجاح. رصيدك الجديد هو <b>{balance}</b>.", parse_mode='HTML')
-        else:
-            update.message.reply_text("❌ <b>خطأ:</b> يجب أن يكون المبلغ أكبر من صفر.", parse_mode='HTML')
-    except (ValueError, IndexError):
-        update.message.reply_text(
-            "❌ <b>خطأ:</b> صيغة الأمر غير صحيحة.\n"
-            "يجب عليك كتابة الأمر كالتالي:\n"
-            "<b>إيداع \"المبلغ\"</b>\n"
-            "مثال: <code>إيداع 100</code> لإضافة 100 وحدة.",
-            parse_mode='HTML'
-        )
 
 def handle_transfer(update, command, user_id, language, balance, account_number):
     try:
