@@ -1,60 +1,30 @@
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
-from telegram.ext import CallbackContext, CommandHandler, Updater, MessageHandler, Filters
-from database import load_user_data, save_user_data, init_db
 import logging
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackQueryHandler
+from database import init_db
+from handlers import handle_commands
+from handlers import correct_command
 import json
 import difflib
+API_TOKEN = "8119443898:AAFwm5E368v-Ov-M_XGBQYCJxj1vMDQbv-0" 
 
-# إعداد الـ Token الخاص بالبوت
-API_TOKEN = '8119443898:AAFwm5E368v-Ov-M_XGBQYCJxj1vMDQbv-0'
-
-KNOWN_COMMANDS = {'start', 'help', 'حسابي', 'اقتراح', 'سحب', 'إيداع'}
-
-def help_command(update: Update, context: CallbackContext) -> None:
-    help_text = (
-        "<b>📋 الأوامر المتاحة:</b>\n"
-        "<b>/start</b> - لبدء التفاعل مع البوت.\n"
-        "<b>/help</b> - لعرض هذه الرسالة.\n"
-        "<b>/حسابي</b> - لعرض معلومات الحساب.\n"
-        "<b>/اقتراح</b> - لإرسال اقتراحات.\n"
-        "<b>/سحب</b> - لسحب الأموال.\n"
-        "<b>/إيداع</b> - لإيداع الأموال."
-    )
-    update.message.reply_text(help_text, parse_mode='HTML')
-
-def correct_command(update: Update, context: CallbackContext) -> None:
-    message_text = update.message.text.strip().lower()
-
-    if message_text in KNOWN_COMMANDS:
-        update.message.reply_text(
-            f"❌ يبدو أنك نسيت كتابة '/' قبل الأمر. جرب كتابة: <b>/{message_text}</b>.",
-            parse_mode='HTML'
-        )
-    else:
-        closest_matches = difflib.get_close_matches(message_text, KNOWN_COMMANDS, n=1, cutoff=0.6)
-        if closest_matches:
-            suggested_command = closest_matches[0]
-            update.message.reply_text(
-                f"❌ لا يبدو أن الأمر <b>{message_text}</b> صحيح. هل كنت تقصد: <b>/{suggested_command}</b>؟",
-                parse_mode='HTML'
-            )
-
-# تفعيل نظام التسجيل لمراقبة الأخطاء
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 def start_bot():
-    updater = Updater(token=API_TOKEN, use_context=True)
     dispatcher = updater.dispatcher
 
-    dispatcher.add_handler(CommandHandler('help', help_command))
-    dispatcher.add_handler(CommandHandler('حسابي', handle_account_info))  # تأكد من وجود دالة handle_account_info
-    dispatcher.add_handler(CommandHandler('اقتراح', suggestion))  # تأكد من وجود دالة suggestion
-    dispatcher.add_handler(CommandHandler('سحب', handle_withdraw))  # تأكد من وجود دالة handle_withdraw
-    dispatcher.add_handler(CommandHandler('إيداع', handle_deposit))  # تأكد من وجود دالة handle_deposit
+    # معالجة الأوامر المعروفة
+    dispatcher.add_handler(CommandHandler('start', handle_message))
+    dispatcher.add_handler(CommandHandler('help', handle_message))
+    dispatcher.add_handler(CommandHandler('حسابي', handle_message))
+    dispatcher.add_handler(CommandHandler('اقتراح', handle_message))
+    dispatcher.add_handler(CommandHandler('سحب', handle_message))
+    dispatcher.add_handler(CommandHandler('إيداع', handle_message))
+
+    # تصحيح الأخطاء الشائعة
     dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, correct_command))
 
-    updater.start_polling()
+updater.start_polling()
     updater.idle()
 
 if __name__ == '__main__':
