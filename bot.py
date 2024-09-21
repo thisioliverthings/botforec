@@ -1,5 +1,5 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
-from telegram.ext import CallbackContext, CommandHandler, CallbackQueryHandler, Updater, MessageHandler, Filters
+from telegram.ext import CallbackContext, CommandHandler, Updater, MessageHandler, Filters
 from database import load_user_data, save_user_data, init_db
 import logging
 import json
@@ -9,6 +9,18 @@ import difflib
 API_TOKEN = '8119443898:AAFwm5E368v-Ov-M_XGBQYCJxj1vMDQbv-0'
 
 KNOWN_COMMANDS = {'start', 'help', 'حسابي', 'اقتراح', 'سحب', 'إيداع'}
+
+def help_command(update: Update, context: CallbackContext) -> None:
+    help_text = (
+        "<b>📋 الأوامر المتاحة:</b>\n"
+        "<b>/start</b> - لبدء التفاعل مع البوت.\n"
+        "<b>/help</b> - لعرض هذه الرسالة.\n"
+        "<b>/حسابي</b> - لعرض معلومات الحساب.\n"
+        "<b>/اقتراح</b> - لإرسال اقتراحات.\n"
+        "<b>/سحب</b> - لسحب الأموال.\n"
+        "<b>/إيداع</b> - لإيداع الأموال."
+    )
+    update.message.reply_text(help_text, parse_mode='HTML')
 
 def correct_command(update: Update, context: CallbackContext) -> None:
     message_text = update.message.text.strip().lower()
@@ -35,7 +47,7 @@ def start_bot():
     updater = Updater(token=API_TOKEN, use_context=True)
     dispatcher = updater.dispatcher
 
-    dispatcher.add_handler(CommandHandler('help', help_command))  # تأكد من وجود دالة help_command
+    dispatcher.add_handler(CommandHandler('help', help_command))
     dispatcher.add_handler(CommandHandler('حسابي', handle_account_info))  # تأكد من وجود دالة handle_account_info
     dispatcher.add_handler(CommandHandler('اقتراح', suggestion))  # تأكد من وجود دالة suggestion
     dispatcher.add_handler(CommandHandler('سحب', handle_withdraw))  # تأكد من وجود دالة handle_withdraw
