@@ -1,5 +1,5 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
-from telegram.ext import CallbackContext, CommandHandler, CallbackQueryHandler, Updater, dispatcher 
+from telegram.ext import CallbackContext, CommandHandler, CallbackQueryHandler, Updater
 from database import load_user_data, save_user_data
 import logging
 import json
