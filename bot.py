@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 def start_bot():
     
-    updater = Updater("TOKEN", use_context=True)
+    Updater = Updater("TOKEN", use_ontext=True)
     # معالجة الأوامر المعروفة
     dispatcher = updater.dispatcher
     dispatcher.add_handler(CommandHandler('start', handle_message))
@@ -25,8 +25,8 @@ def start_bot():
     # تصحيح الأخطاء الشائعة
     dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, correct_command))
 
-updater.start_polling()
-updater.idle()
+Updater.start_polling()
+Updater.idle()
 
 if __name__ == '__main__':
     init_db()
