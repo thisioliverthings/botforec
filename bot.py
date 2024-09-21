@@ -25,7 +25,7 @@ def start_bot():
     dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, correct_command))
 
 updater.start_polling()
-    updater.idle()
+updater.idle()
 
 if __name__ == '__main__':
     init_db()
