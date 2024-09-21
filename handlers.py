@@ -3,22 +3,6 @@ from telegram.ext import CallbackContext
 from database import load_user_data, save_user_data
 import logging
 
-# إعداد تسجيل الأحداث
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler('bot.log'),  # تسجيل السجلات في ملف
-        logging.StreamHandler()            # طباعة السجلات في الطرفية
-    ]
-)
-
-logger = logging.getLogger(__name__)
-
-# مثال على كيفية استخدامه
-logger.info("تم تفعيل البوت بنجاح!")
-logger.warning("تحذير: هناك شيء غير معتاد!")
-logger.error("خطأ: حدث خطأ!")
 
 def handle_message(update: Update, context: CallbackContext) -> None:
     user_id = update.effective_user.id
@@ -28,7 +12,7 @@ def handle_message(update: Update, context: CallbackContext) -> None:
         "🎉 مرحبًا بك في بوت المرح والأموال! 💰\n\n"
         "هنا حيث يجتمع الترفيه والإثارة مع إدارة أموالك.\n"
         "✨ استعد لمغامرات ممتعة وتحديات مثيرة!\n\n"
-        "للبدء، استخدم الأمر '/help' لتتعرف على جميع المزايا المتاحة لك.\n"
+        "للبدء، استخدم الأمر 'help' لتتعرف على جميع المزايا المتاحة لك.\n"
         "لا تنسَ التحقق من رصيدك وتحديث معلومات حسابك بانتظام!"
     )
 
