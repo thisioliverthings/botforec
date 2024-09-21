@@ -22,15 +22,14 @@ class TelegramBot:
             return json.load(f)
 
     def setup_handlers(self):
-        self.dispatcher.add_handler(CommandHandler('start', self.handle_commands))
-        self.dispatcher.add_handler(CommandHandler('help', self.handle_commands))
-        self.dispatcher.add_handler(CommandHandler('حسابي', self.handle_commands))
-self.dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, self.handle_commands))
-        self.dispatcher.add_handler(CommandHandler('اقتراح', self.handle_commands))
-        self.dispatcher.add_handler(CommandHandler('سحب', self.handle_commands))
-        self.dispatcher.add_handler(CommandHandler('إيداع', self.handle_commands))
-        self.dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, self.correct_command))
-
+    self.dispatcher.add_handler(CommandHandler('start', self.handle_commands))
+    self.dispatcher.add_handler(CommandHandler('help', self.handle_commands))
+    self.dispatcher.add_handler(CommandHandler('حسابي', self.handle_commands))
+    self.dispatcher.add_handler(CommandHandler('اقتراح', self.handle_commands))
+    self.dispatcher.add_handler(CommandHandler('سحب', self.handle_commands))
+    self.dispatcher.add_handler(CommandHandler('إيداع', self.handle_commands))
+    self.dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, self.correct_command))
+    
     def correct_command(self, update: Update, context: CallbackContext) -> None:
         message_text = update.message.text.strip().lower()
         if message_text in self.known_commands:
