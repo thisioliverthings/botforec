@@ -30,7 +30,7 @@ def correct_command(update: Update, context: CallbackContext) -> None:
     else:
         # محاولة إيجاد أمر قريب من النص المدخل باستخدام difflib
         closest_matches = difflib.get_close_matches(message_text, KNOWN_COMMANDS, n=1, cutoff=0.6)
-        
+
         if closest_matches:
             suggested_command = closest_matches[0]
             update.message.reply_text(
@@ -40,8 +40,8 @@ def correct_command(update: Update, context: CallbackContext) -> None:
         else:
             # تجاهل الأوامر غير المعروفة
             pass
-          
-  
+
+
 def handle_message(update: Update, context: CallbackContext) -> None:
     user_id = update.effective_user.id
     username = update.effective_user.username or "غير متوفر"
@@ -85,8 +85,9 @@ def load_help_texts():
 
 help_texts = load_help_texts()
 
-def button(update: Update, context: CallbackContext) -> None:
+context: CallbackContext) -> None:
     query = update.callback_query
+    query.answer()  # تأكد من إضافة هذه السطر
 
     reply_markup_help = InlineKeyboardMarkup([
         [InlineKeyboardButton("🔙 رجوع", callback_data='help_menu')],
@@ -107,6 +108,7 @@ def button(update: Update, context: CallbackContext) -> None:
             [InlineKeyboardButton("❌ خروج", callback_data='confirm_exit')]
         ])
         query.edit_message_text(text="📚 مرحبًا! اختر قسمًا لعرض الشرح:", reply_markup=reply_markup_menu)
+
 
 def handle_commands(update: Update, context: CallbackContext) -> None:
     command = update.message.text.strip()
