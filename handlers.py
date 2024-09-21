@@ -85,7 +85,7 @@ def load_help_texts():
 
 help_texts = load_help_texts()
 
-context: CallbackContext) -> None:
+def button (update:Update,context: CallbackContext) -> None:
     query = update.callback_query
     query.answer()  # تأكد من إضافة هذه السطر
 
