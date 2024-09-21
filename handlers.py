@@ -23,8 +23,8 @@ def handle_message(update: Update, context: CallbackContext) -> None:
         "<b>💡 نحن هنا لجعل تجربتك مميزة وممتعة!</b>"
     )
     context.bot.send_message(chat_id=update.message.chat_id, text=welcome_message, parse_mode='HTML')
-    
-    
+
+
 
 def suggestion(update: Update, context: CallbackContext) -> None:
     user_id = update.message.from_user.id
@@ -48,22 +48,35 @@ def help_command(update: Update, context: CallbackContext) -> None:
     reply_markup = InlineKeyboardMarkup(keyboard)
     update.message.reply_text("📚 مرحبًا! اختر قسمًا لعرض الشرح:", reply_markup=reply_markup)
 
+JSON
+def load_help_texts():
+    with open('help_text.json', 'r', encoding='utf-8') as f:
+        return json.load(f)
+
+help_texts = load_help_texts()
+
 def button(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
 
+    reply_markup_help = InlineKeyboardMarkup([
+        [InlineKeyboardButton("🔙 رجوع", callback_data='help_menu')],
+        [InlineKeyboardButton("❌ خروج", callback_data='confirm_exit')],
+        [InlineKeyboardButton("ℹ️ معلومات عن البوت", callback_data='bot_info')],
+        [InlineKeyboardButton("📜 بنود الخدمة", callback_data='terms_and_privacy')]
+    ])
+
     if query.data in help_texts:
-        query.edit_message_text(text=help_texts[query.data], parse_mode='HTML', reply_markup=create_help_buttons())
+        query.edit_message_text(text=help_texts[query.data], parse_mode='HTML', reply_markup=reply_markup_help)
     elif query.data == 'help_menu':
-        reply_markup_menu = create_menu_buttons()
-        query.edit_message_text(text="📚 مرحبًا! اختر قسمًا لعرض الشرح:", reply_markup=reply_markup_menu)
-    elif query.data == 'confirm_exit':
-        reply_markup_confirm = InlineKeyboardMarkup([
-            [InlineKeyboardButton("✅ نعم، الخروج", callback_data='exit_help')],
-            [InlineKeyboardButton("🔙 لا، العودة", callback_data='help_menu')]
+        reply_markup_menu = InlineKeyboardMarkup([
+            [InlineKeyboardButton("📜 الأوامر الأساسية", callback_data='help_section_1')],
+            [InlineKeyboardButton("📊 نظام النقاط والمحفظة", callback_data='help_section_2')],
+            [InlineKeyboardButton("🌐 إدارة اللغة", callback_data='help_section_3')],
+            [InlineKeyboardButton("💼 العضويات والاشتراكات", callback_data='help_section_4')],
+            [InlineKeyboardButton("🎁 عروض ومكافآت خاصة", callback_data='help_section_5')],
+            [InlineKeyboardButton("❌ خروج", callback_data='confirm_exit')]
         ])
-        query.edit_message_text(text="⚠️ هل أنت متأكد أنك تريد الخروج؟", reply_markup=reply_markup_confirm)
-    elif query.data == 'exit_help':
-        query.edit_message_text(text="✅ تم الخروج من قائمة المساعدة. إذا كنت بحاجة إلى مساعدة أخرى، اكتب 'help'.", reply_markup=None)
+        query.edit_message_text(text="📚 مرحبًا! اختر قسمًا لعرض الشرح:", reply_markup=reply_markup_menu)
 
 def handle_commands(update: Update, context: CallbackContext) -> None:
     command = update.message.text.strip()
@@ -121,7 +134,7 @@ def handle_account_info(update: Update, language, balance, account_number):
     )
 
     update.message.reply_text(account_info, parse_mode='HTML')
-    
+
 def handle_deposit(update, command, user_id, language, balance, account_number):
     try:
         amount = float(command.split()[1])
