@@ -165,12 +165,15 @@ class ButtonHandler:
         self.bot = bot
 
     def button(self, update: Update, context: CallbackContext) -> None:
-        query = update.callback_query
-        query.answer()
+    query = update.callback_query
+    query.answer()
 
-        reply_markup_help = InlineKeyboardMarkup([
-            [InlineKeyboardButton("🔙 رجوع", callback_data='help_menu')],
-            [InlineKeyboardButton("❌ خروج",[InlineKeyboardButton("❌ خروج", callback_data='confirm_exit')]])
+    reply_markup_help = InlineKeyboardMarkup([
+        [InlineKeyboardButton("🔙 رجوع", callback_data='help_menu')],
+        [InlineKeyboardButton("❌ خروج", callback_data='confirm_exit')]
+    ])
+
+    # أكمل تنفيذ الكود هنا كما تريد
         query.edit_message_text(text=self.bot.help_texts.get('main_menu', 'لم يتم العثور على نص المساعدة.'),
                                 reply_markup=reply_markup_help)
 
