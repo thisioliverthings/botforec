@@ -258,3 +258,35 @@ def handle_balance(update, balance):
     update.message.reply_text(f"💰 رصيدك الحالي هو: <b>{balance}</b>.", parse_mode='HTML')
 
 # إضافة المزيد من الوظائف مثل handle_deposit
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackQueryHandler
+
+def main() -> None:
+    # إنشاء الـ Updater لبدء البوت
+    updater = Updater("YOUR_BOT_TOKEN", use_context=True)
+
+    # الحصول على الـ dispatcher لإضافة المعالجات (handlers)
+    dispatcher = updater.dispatcher
+
+    # إضافة معالجات الأوامر
+    dispatcher.add_handler(CommandHandler("start", handle_start))
+    dispatcher.add_handler(CommandHandler("help", help_command))
+    dispatcher.add_handler(CommandHandler("حسابي", handle_account_info))
+    dispatcher.add_handler(CommandHandler("اقتراح", suggestion))
+    
+    # معالجة الرسائل النصية العادية
+    dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, handle_message))
+
+    # معالجة الأخطاء أو الأوامر غير المعروفة
+    dispatcher.add_handler(MessageHandler(Filters.command, correct_command))
+
+    # إضافة معالج للأزرار التفاعلية (CallbackQueryHandler)
+    dispatcher.add_handler(CallbackQueryHandler(button))
+
+    # بدء البوت
+    updater.start_polling()
+
+    # الانتظار حتى يقوم المستخدم بإنهاء البوت
+    updater.idle()
+
+if __name__ == '__main__':
+    main()
