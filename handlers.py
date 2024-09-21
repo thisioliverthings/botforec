@@ -225,3 +225,22 @@ def handle_balance(update, balance):
     update.message.reply_text(f"💰 رصيدك الحالي هو: <b>{balance}</b>.", parse_mode='HTML')
 
 # إضافة المزيد من الوظائف مثل handle_deposit
+
+def main():
+    bot_token = "YOUR_TELEGRAM_BOT_API_KEY"
+    updater = Updater(token=bot_token, use_context=True)
+    dp = updater.dispatcher
+
+    bot_instance = TraderBot()
+
+    dp.add_handler(CommandHandler("start", bot_instance.handle_start))
+    dp.add_handler(CommandHandler("help", bot_instance.help_command))
+    dp.add_handler(MessageHandler(Filters.text & ~Filters.command, bot_instance.handle_message))
+    dp.add_handler(CallbackQueryHandler(bot_instance.button))
+
+    # بدء التشغيل
+    updater.start_polling()
+    updater.idle()
+
+if __name__ == "__main__":
+    main()
