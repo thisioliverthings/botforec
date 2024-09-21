@@ -184,21 +184,21 @@ class TraderBot:
                 language, balance, account_number = load_user_data(user_id)
 
                 if command == '/start':
-                    handle_start(update, context)
+                    self.handle_start(update, context)
                 elif command.lower() in ['/help', 'مساعدة']:
-                    help_command(update, context)
+                    self.help_command(update, context)
                 elif command == 'حسابي':
-                    handle_account_info(update, language, balance, account_number)
+                    self.handle_account_info(update)
                 elif command.startswith('اقتراح'):
-                    suggestion(update, context)
+                    self.suggestion(update, context)
                 elif command.startswith('إيداع'):
-                    handle_deposit(update, command, user_id, language, balance, account_number)
+                    self.handle_deposit(update, command)
                 elif command.startswith('سحب'):
-                    handle_withdraw(update, command, user_id, language, balance, account_number)
+                    self.handle_withdraw(update, command)
                 elif command.startswith('تحويل'):
-                    handle_transfer(update, command, user_id, language, balance, account_number)
+                    self.handle_transfer(update, command)
                 elif command == 'رصيدي':
-                    handle_balance(update, balance)
+                    self.handle_balance(update)
 
             except Exception as e:
                 logger.error(f"Error handling command: {e}")
