@@ -196,7 +196,7 @@ class TraderBot:
 
 
 def main():
-    updater = Updater("YOUR_TOKEN", use_context=True)
+    updater = Updater("8119443898:AAFwm5E368v-Ov-M_XGBQYCJxj1vMDQbv-0", use_context=True)
     dp = updater.dispatcher
 
     # إعداد كافة الأوامر والردود
