@@ -3,6 +3,7 @@ from telegram.ext import CallbackContext
 from database import load_user_data, save_user_data
 import logging
 import json
+import difflib
 
 # إعداد نظام التسجيل لمراقبة الأخطاء
 logging.basicConfig(level=logging.INFO)
@@ -12,6 +13,35 @@ logger = logging.getLogger(__name__)
 with open('help_text.json', 'r', encoding='utf-8') as f:
     help_texts = json.load(f)
 
+
+
+
+# قائمة الأوامر المعروفة
+KNOWN_COMMANDS = {'start', 'help', 'حسابي', 'اقتراح', 'سحب', 'إيداع'}
+
+def correct_command(update: Update, context: CallbackContext) -> None:
+    message_text = update.message.text.strip().lower()  # إزالة المسافات والتعامل مع الأحرف الصغيرة
+
+    if message_text in KNOWN_COMMANDS:
+        update.message.reply_text(
+            f"❌ يبدو أنك نسيت كتابة '/' قبل الأمر. جرب كتابة: <b>/{message_text}</b>.",
+            parse_mode='HTML'
+        )
+    else:
+        # محاولة إيجاد أمر قريب من النص المدخل باستخدام difflib
+        closest_matches = difflib.get_close_matches(message_text, KNOWN_COMMANDS, n=1, cutoff=0.6)
+        
+        if closest_matches:
+            suggested_command = closest_matches[0]
+            update.message.reply_text(
+                f"❌ لا يبدو أن الأمر <b>{message_text}</b> صحيح. هل كنت تقصد: <b>/{suggested_command}</b>؟",
+                parse_mode='HTML'
+            )
+        else:
+            # تجاهل الأوامر غير المعروفة
+            pass
+          
+  
 def handle_message(update: Update, context: CallbackContext) -> None:
     user_id = update.effective_user.id
     username = update.effective_user.username or "غير متوفر"
