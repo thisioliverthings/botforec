@@ -17,7 +17,7 @@ def start_bot():
     dispatcher.add_handler(CommandHandler('start', handle_commands))
     dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, handle_commands))
 
-updater.dispatcher.add_handler(CallbackQueryHandler(button))
+    updater.dispatcher.add_handler(CallbackQueryHandler(button))
     
     updater.start_polling()
     updater.idle()
