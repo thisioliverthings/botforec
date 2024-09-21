@@ -262,7 +262,7 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Callb
 
 def main() -> None:
     # إنشاء الـ Updater لبدء البوت
-    updater = Updater("YOUR_BOT_TOKEN", use_context=True)
+    updater = Updater("8119443898:AAFwm5E368v-Ov-M_XGBQYCJxj1vMDQbv-0", use_context=True)
 
     # الحصول على الـ dispatcher لإضافة المعالجات (handlers)
     dispatcher = updater.dispatcher
