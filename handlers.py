@@ -30,90 +30,34 @@ def suggestion(update: Update, context: CallbackContext) -> None:
 #دالة الاوامر1 (الاساسيه)
 
 #2 دالة الاوامر
-def help_command(update: Update, context: CallbackContext) -> None:
-    keyboard = [
-        [InlineKeyboardButton("✨ القسم 1: الأوامر الأساسية", callback_data='help_section_1')],
-        [InlineKeyboardButton("💰 القسم 2: نظام النقاط", callback_data='help_section_2')],
-        [InlineKeyboardButton("🌍 القسم 3: إدارة اللغة", callback_data='help_section_3')],
-        [InlineKeyboardButton("🎟️ القسم 4: العضويات", callback_data='help_section_4')],
-        [InlineKeyboardButton("🎁 القسم 5: العروض والمكافآت", callback_data='help_section_5')],
-        [InlineKeyboardButton("🔙 رجوع", callback_data='help_menu')]
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
+# def help_command(update: Update, context: CallbackContext) -> None:
+#     keyboard = [
+#         [InlineKeyboardButton("✨ القسم 1: الأوامر الأساسية", callback_data='help_section_1')],
+#         [InlineKeyboardButton("💰 القسم 2: نظام النقاط", callback_data='help_section_2')],
+#         [InlineKeyboardButton("🌍 القسم 3: إدارة اللغة", callback_data='help_section_3')],
+#         [InlineKeyboardButton("🎟️ القسم 4: العضويات", callback_data='help_section_4')],
+#         [InlineKeyboardButton("🎁 القسم 5: العروض والمكافآت", callback_data='help_section_5')],
+#         [InlineKeyboardButton("🔙 رجوع", callback_data='help_menu')]
+#     ]
+#     reply_markup = InlineKeyboardMarkup(keyboard)
 
-    if update.callback_query:
-        query = update.callback_query
-        query.message.reply_text("📚 مرحبًا! اختر قسمًا لعرض الشرح:", reply_markup=reply_markup)
+#     if update.callback_query:
+#         query = update.callback_query
+#         query.message.reply_text("📚 مرحبًا! اختر قسمًا لعرض الشرح:", reply_markup=reply_markup)
+
+
+
+# تحميل النصوص من ملف JSON
+with open('help_text.json', 'r', encoding='utf-8') as f:
+    help_texts = json.load(f)
 
 def button(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
-    help_texts = {
-        'help_section_1': (
-            "📜 <b>الأوامر الأساسية:</b>\n"
-            "1️⃣ <b>تغيير اللغة:</b> اكتب '<code>تغيير اللغة</code>' لتغيير لغة البوت.\n"
-            "2️⃣ <b>مساعدة:</b> اكتب '<code>help</code>' لعرض التعليمات.\n"
-            "3️⃣ <b>الإعدادات:</b> اضبط إعداداتك باستخدام '<code>settings</code>'.\n"
-            "4️⃣ <b>المعلومات:</b> تعرف على البوت عبر '<code>info</code>'.\n"
-            "5️⃣ <b>اقتراحات:</b> شارك اقتراحاتك بكتابة '<code>اقتراح</code>'.\n"
-            "6️⃣ <b>التحقق من حالة الحساب:</b> اكتب '<code>حالة</code>' للتحقق من حالة حسابك والمكافآت المحتملة."
-        ),
-        'help_section_2': (
-            "📊 <b>نظام النقاط والمحفظة:</b>\n"
-            "1️⃣ <b>رصيدك:</b> اكتب '<code>رصيدي</code>' لعرض رصيدك.\n"
-            "2️⃣ <b>إيداع:</b> استخدم '<code>إيداع [المبلغ]</code>' لإضافة الأموال إلى حسابك.\n"
-            "3️⃣ <b>سحب:</b> اكتب '<code>سحب [المبلغ]</code>' لسحب الأموال.\n"
-            "4️⃣ <b>تحويل:</b> أرسل أموالًا إلى مستخدم آخر باستخدام '<code>تحويل [المبلغ] إلى [المستخدم]</code>'.\n"
-            "5️⃣ <b>المكافآت اليومية:</b> احصل على مكافأتك اليومية بكتابة '<code>المكافأة</code>'.\n"
-            "6️⃣ <b>مستوى العضوية:</b> تحقق من مستوى عضويتك الحالي باستخدام '<code>العضوية</code>'.\n"
-            "7️⃣ <b>سجل المعاملات:</b> اكتب '<code>المعاملات</code>' لعرض تاريخ معاملاتك المالية."
-        ),
-        'help_section_3': (
-            "🌐 <b>قريباً...</b>\n"),
-        'help_section_4': (
-            "💼 <b>العضويات والاشتراكات:</b>\n"
-            "1️⃣ <b>الترقية:</b> اكتب '<code>ترقية [نوع العضوية]</code>' لترقية حسابك.\n"
-            "2️⃣ <b>التحقق من العضوية:</b> استخدم '<code>العضوية</code>' للتحقق من مستوى عضويتك الحالي.\n"
-            "3️⃣ <b>إلغاء الاشتراك:</b> إذا كنت ترغب في إلغاء الاشتراك، اكتب '<code>إلغاء الاشتراك</code>'."
-        ),
-        'help_section_5': (
-            "🎁 <b>عروض ومكافآت خاصة:</b>\n"
-            "1️⃣ <b>العروض:</b> اكتب '<code>العروض</code>' لعرض العروض الحالية المتاحة لك.\n"
-            "2️⃣ <b>المكافأة الخاصة:</b> تحقق من وجود مكافأة خاصة بكتابة '<code>مكافأة خاصة</code>'.\n"
-            "3️⃣ <b>المسابقات الشهرية:</b> شارك في المسابقات الشهرية باستخدام '<code>مسابقة الشهر</code>'."
-        ),
-        'bot_info': (
-            "ℹ️ <b>بوت لولي الاقتصادي الترفيهي:</b>\n"
-            "هذا البوت مصمم لتقديم تجربة ترفيهية مميزة تجمع بين المرح والإدارة المالية.\n"
-            "👨‍💻 <b>المطور:</b> <a href='https://t.me/oliceer'>oliceer</a>"
-        ),
-        'terms_and_privacy': (
-            "📜 <b>بنود الخدمة:</b>\n"
-            "1️⃣ <b>قبول الشروط:</b> باستخدامك للبوت، توافق على الالتزام بهذه البنود.\n"
-            "2️⃣ <b>استخدام الخدمة:</b> يُسمح لك باستخدام البوت لأغراض ترفيهية فقط.\n"
-            "🔒 <b>شروط الخصوصية:</b>\n"
-            "1️⃣ <b>جمع المعلومات:</b> نقوم بجمع معلومات محدودة لتحسين تجربتك.\n"
-            "2️⃣ <b>حماية المعلومات:</b> نتخذ تدابير أمنية لحماية بياناتك."
-        )
-    }
-
-    reply_markup_help = InlineKeyboardMarkup([
-        [InlineKeyboardButton("🔙 رجوع", callback_data='help_menu')],
-        [InlineKeyboardButton("❌ خروج", callback_data='confirm_exit')],
-        [InlineKeyboardButton("ℹ️ معلومات عن البوت", callback_data='bot_info')],
-        [InlineKeyboardButton("📜 بنود الخدمة", callback_data='terms_and_privacy')]
-    ])
 
     if query.data in help_texts:
-        query.edit_message_text(text=help_texts[query.data], parse_mode='HTML', reply_markup=reply_markup_help)
+        query.edit_message_text(text=help_texts[query.data], parse_mode='HTML', reply_markup=create_help_buttons())
     elif query.data == 'help_menu':
-        reply_markup_menu = InlineKeyboardMarkup([
-            [InlineKeyboardButton("📜 الأوامر الأساسية", callback_data='help_section_1')],
-            [InlineKeyboardButton("📊 نظام النقاط والمحفظة", callback_data='help_section_2')],
-            [InlineKeyboardButton("🌐 إدارة اللغة", callback_data='help_section_3')],
-            [InlineKeyboardButton("💼 العضويات والاشتراكات", callback_data='help_section_4')],
-            [InlineKeyboardButton("🎁 عروض ومكافآت خاصة", callback_data='help_section_5')],
-            [InlineKeyboardButton("❌ خروج", callback_data='confirm_exit')]
-        ])
+        reply_markup_menu = create_menu_buttons()
         query.edit_message_text(text="📚 مرحبًا! اختر قسمًا لعرض الشرح:", reply_markup=reply_markup_menu)
     elif query.data == 'confirm_exit':
         reply_markup_confirm = InlineKeyboardMarkup([
@@ -170,10 +114,10 @@ def handle_command(update: Update, context: CallbackContext) -> None:
             update.message.reply_text("❌ الأمر غير معروف. حاول مرة أخرى.")  # رسالة افتراضية للأوامر غير المعروفة
     except Exception as e:
         logger.error(f"Error handling command: {e}")  # تسجيل أي أخطاء تظهر
-        
+
 def handle_start(update, context):
     handle_message(update, context)
-    
+
 def handle_help(update, context):
     # نص المساعدة المبدئي
     help_text = (
@@ -195,10 +139,51 @@ def handle_help(update, context):
         ]
     ])
     update.message.reply_text(text=help_text, parse_mode='HTML', reply_markup=reply_markup)
+
+def handle_account_info(update: Update, language, balance, account_number):
+    user_id = update.message.from_user.id
+    username = update.message.from_user.username or "غير متوفر"
+    first_name = update.message.from_user.first_name or "غير متوفر"
+    last_name = update.message.from_user.last_name or "غير متوفر"
     
-def handle_account_info(update, language, balance, account_number):
-    update.message.reply_text(f"📊 معلومات حسابك:\n- اللغة: {language}\n- الرصيد: {balance}\n- رقم الحساب: {account_number}")
+    # معلومات إضافية
+    user_joined_date = update.message.date.strftime("%Y-%m-%d")  # تاريخ الانضمام
+    user_last_active = update.message.date.strftime("%Y-%m-%d %H:%M:%S")  # آخر نشاط
+    account_status = "نشط" if balance > 0 else "غير نشط"  # حالة الحساب
+    total_transactions = 5  # مثال: عدد المعاملات
+    last_transaction_date = "2024-09-20"  # مثال: تاريخ آخر معاملة
     
+    # نص الرسالة مع تحسينات
+    account_info = (
+        "🌟 **معلومات حسابك** 🌟\n"
+        f"👤 **اسم المستخدم:** {username}\n"
+        f"🧑 **الاسم الأول:** {first_name}\n"
+        f"👥 **اسم العائلة:** {last_name}\n"
+        f"📅 **اللغة:** {language}\n"
+        f"💰 **الرصيد:** {balance} ج.م\n"
+        f"🔑 **رقم الحساب:** {account_number}\n"
+        f"🆔 **معرف المستخدم:** {user_id}\n"
+        f"📅 **تاريخ الانضمام:** {user_joined_date}\n"
+        f"🕒 **آخر نشاط:** {user_last_active}\n"
+        f"⚖️ **حالة الحساب:** {account_status}\n"
+        f"🔄 **عدد المعاملات:** {total_transactions}\n"
+        f"📅 **تاريخ آخر معاملة:** {last_transaction_date}\n"
+        "----------------------------------\n"
+        "📩 **لأي استفسارات، لا تتردد في التواصل!**\n"
+        "📈 **شكرًا لاستخدامك بوتنا!**\n"
+        "🎉 **استمتع بتجربتك!**"
+    )
+    
+    # إرسال الرسالة
+    update.message.reply_text(account_info, parse_mode='HTML')
+
+    # إضافة خيارات للتفاعل (مثل زر)
+    reply_markup = InlineKeyboardMarkup([
+        [InlineKeyboardButton("إدارة الحساب", callback_data='manage_account')],
+        [InlineKeyboardButton("عرض المعاملات", callback_data='view_transactions')]
+    ])
+    update.message.reply_text("💼 **اختر ما تريد القيام به:**", reply_markup=reply_markup)
+
 def handle_change_language(update):
     update.message.reply_text("⚙️ يرجى تحديد اللغة الجديدة.")
 
@@ -244,6 +229,6 @@ def handle_transfer(update, command, user_id, language, balance, account_number)
             update.message.reply_text("❓ لم يتم العثور على المستخدم الذي تحاول التحويل إليه.")
     except (ValueError, IndexError):
         update.message.reply_text("❌ صيغة الأمر غير صحيحة. يجب أن تكتب: تحويل [المبلغ] إلى [معرف المستلم].")
-        
+
 def handle_balance(update, balance):
     update.message.reply_text(f"💰 رصيدك الحالي هو: <b>{balance}</b>.", parse_mode='HTML')
