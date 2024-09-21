@@ -36,6 +36,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 def start_bot():
+    dispatcher = updater.dispatcher  # تأكد من تعريف dispatcher هنا
     dispatcher.add_handler(CommandHandler('start', handle_message))
     dispatcher.add_handler(CommandHandler('help', help_command))
     dispatcher.add_handler(CommandHandler('حسابي', handle_account_info))
