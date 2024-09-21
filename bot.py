@@ -5,7 +5,7 @@ from database import init_db
 from handlers import handle_commands, correct_command, button
 
 # إعداد الـ Token الخاص بالبوت
-API_TOKEN = 'YOUR_API_TOKEN_HERE'
+API_TOKEN = '8119443898:AAFwm5E368v-Ov-M_XGBQYCJxj1vMDQbv-0'
 
 # تفعيل نظام التسجيل لمراقبة الأخطاء
 logging.basicConfig(level=logging.INFO)
