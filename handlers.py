@@ -15,17 +15,16 @@ with open('help_text.json', 'r', encoding='utf-8') as f:
 def handle_message(update: Update, context: CallbackContext) -> None:
     user_id = update.effective_user.id
     username = update.effective_user.username or "غير متوفر"
-    language, balance, account_number = load_user_data(user_id)
-
     welcome_message = (
-        f"🎉 مرحبًا بك، {username}! في بوت المرح والأموال! 💰\n\n"
-        "هنا حيث يجتمع الترفيه والإثارة مع إدارة أموالك.\n"
-        "✨ استعد لمغامرات ممتعة وتحديات مثيرة!\n\n"
-        "للبدء، استخدم الأمر 'help' لتتعرف على جميع المزايا المتاحة لك.\n"
-        "لا تنسَ التحقق من رصيدك وتحديث معلومات حسابك بانتظام!"
+        f"<b>🎉 مرحبًا بك، {username}! في بوت 𝗟𝗼𝗹𝗶 𝗧𝗿𝗮𝗱𝗲𝗿𝗕𝗼𝘁! 💰</b>\n\n"
+        "<b>✨ هنا حيث يجتمع الترفيه والإثارة مع إدارة أموالك.</b>\n"
+        "<b>🌟 استعد لمغامرات ممتعة وتحديات مثيرة!</b>\n\n"
+        "<b>📜 لبدء رحلتك، استخدم الأمر <code>help</code> لتتعرف على جميع المزايا المتاحة لك.</b>\n"
+        "<b>💡 نحن هنا لجعل تجربتك مميزة وممتعة!</b>"
     )
-
-    context.bot.send_message(chat_id=update.message.chat_id, text=welcome_message)
+    context.bot.send_message(chat_id=update.message.chat_id, text=welcome_message, parse_mode='HTML')
+    
+    
 
 def suggestion(update: Update, context: CallbackContext) -> None:
     user_id = update.message.from_user.id
