@@ -172,7 +172,7 @@ class TraderBot:
         language, balance, account_number = load_user_data(user_id)
         update.message.reply_text(f"💰 رصيدك الحالي هو: <b>{balance}</b>.", parse_mode='HTML')
 
-    def handle_commands(update: Update, context: CallbackContext) -> None:
+    def handle_commands(self, update: Update, context: CallbackContext) -> None:
         command = update.message.text.strip()
         user_id = update.message.from_user.id
 
