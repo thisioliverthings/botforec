@@ -203,9 +203,9 @@ class TraderBot:
             except Exception as e:
                 logger.error(f"Error handling command: {e}")
                 update.message.reply_text("❌ حدث خطأ أثناء معالجة الأمر. يرجى المحاولة لاحقًا.")
-    else:
+        else:
         # لا تفعل شيئًا إذا لم يكن الأمر معروفًا
-        pass
+            pass
 
     def run(self) -> None:
         updater = Updater("8119443898:AAFwm5E368v-Ov-M_XGBQYCJxj1vMDQbv-0", use_context=True)
