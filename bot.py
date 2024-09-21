@@ -47,36 +47,26 @@ class TelegramBot:
                 )
 
     def handle_commands(self, update: Update, context: CallbackContext) -> None:
-        command = update.message.text.strip()
-        user_id = update.message.from_user.id
-        language, balance, account_number = load_user_data(user_id)
-
-        try:
-            if command == '/start':
-                self.handle_start(update, context)
-            elif command.lower() in ['help', 'help/', '/help', 'مساعدة', 'مساعده']:
-                self.help_command(update, context)
-            elif command == 'حسابي':
-                self.handle_account_info(update, language, balance, account_number)
-            elif command.startswith('اقتراح'):
-                self.suggestion(update, context)
-            elif command == 'تغيير اللغة':
-                self.handle_change_language(update)
-            elif command.startswith('تحويل'):
-                self.handle_transfer(update, command, user_id, language, balance, account_number)
-            elif command.startswith('إيداع'):
-                self.handle_deposit(update, command, user_id, language, balance, account_number)
-            elif command.startswith('سحب'):
-                self.handle_withdraw(update, command, user_id, language, balance, account_number)
-            else:
-                update.message.reply_text("❌ الأمر غير معروف. حاول مرة أخرى.")
-        except Exception as e:
-            logger.error(f"Error handling command: {e}")
-            update.message.reply_text("❌ حدث خطأ أثناء معالجة الأمر. يرجى المحاولة لاحقًا.")
-
-    def handle_start(self, update, context):
-        update.message.reply_text("🌟 أهلاً وسهلاً! كيف يمكنني مساعدتك؟")
-
+    command = update.message.text
+    # معالجة الأوامر
+        if command == '/start':
+        update.message.reply_text('مرحبا بك في البوت!')
+        elif command == '/help':
+        update.message.reply_text('هذه هي قائمة الأوامر المتاحة.')
+        elif command == 'حسابي':
+        # تنفيذ كود حسابي
+        update.message.reply_text('هنا معلومات حسابك.')
+        elif command == 'اقتراح':
+        # تنفيذ كود الاقتراح
+        update.message.reply_text('أرسل اقتراحك.')
+        elif command == 'سحب':
+        # تنفيذ كود السحب
+        update.message.reply_text('كم تريد سحبه؟')
+        elif command == 'إيداع':
+        # تنفيذ كود الإيداع
+        update.message.reply_text('كم تريد إيداعه؟')
+        else:
+        update.message.reply_text('لم أتعرف على هذا الأمر.')
     def handle_account_info(self, update, language, balance, account_number):
         user_id = update.message.from_user.id
         username = update.message.from_user.username or "غير متوفر"
@@ -129,7 +119,7 @@ class TelegramBot:
                 save_user_data(user_id, language, balance, account_number)
                 update.message.reply_text(f"💵 تم إيداع <b>{amount}</b> بنجاح. رصيدك الجديد هو <b>{balance}</b>.", parse_mode='HTML')
             else:
-                update.message.reply_text("❌ <b>خطأ:</b> يجب أن يكون المبلغ أكبر من صفر.", parse_mode='HTML')
+                update.message.reply_text("❌ <b>خطأ:</b> يجب أن يكون المبلغ أكبر من صفر.", PARSE_MODE='HTML')
         except (ValueError, IndexError):
             update.message.reply_text(
                 "❌ <b>خطأ:</b> صيغة الأمر غير صحيحة.\n"
