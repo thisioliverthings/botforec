@@ -36,7 +36,7 @@ class TraderBot:
         user_id = update.message.from_user.id
         suggestion_text = ' '.join(context.args)
 
-        try:
+         try:
             if suggestion_text:
                 context.bot.send_message(chat_id=7161132306, text=f"اقتراح من المستخدم {user_id}: {suggestion_text}")
                 update.message.reply_text("✅ تم إرسال اقتراحك بنجاح.")
