@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 def start_bot():
     
-    Updater = Updater("TOKEN", use_ontext=True)
+    updater = Updater("TOKEN", use_ontext=True)
     # معالجة الأوامر المعروفة
     dispatcher = updater.dispatcher
     dispatcher.add_handler(CommandHandler('start', handle_message))
