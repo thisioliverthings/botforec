@@ -36,15 +36,15 @@ class TraderBot:
         user_id = update.message.from_user.id
         suggestion_text = ' '.join(context.args)
 
-          try:
+        try:
             if suggestion_text:
                 context.bot.send_message(chat_id=7161132306, text=f"اقتراح من المستخدم {user_id}: {suggestion_text}")
                 update.message.reply_text("✅ تم إرسال اقتراحك بنجاح.")
-           else:
+            else:
                 update.message.reply_text("❌ يرجى كتابة اقتراحك بعد الأمر.")
         except Exception as e:
-           logger.error(f"Error handling suggestion: {e}")
-           update.message.reply_text("❌ حدث خطأ أثناء معالجة الاقتراح. يرجى المحاولة لاحقًا.")
+            logger.error(f"Error handling suggestion: {e}")
+            update.message.reply_text("❌ حدث خطأ أثناء معالجة الاقتراح. يرجى المحاولة لاحقًا.")
 
 
     def help_command(self, update: Update, context: CallbackContext) -> None:
